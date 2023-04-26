@@ -38,12 +38,40 @@ app.post("/cadastrar", function(req, res){
 
 app.get("/excluir/:id", function(req, res) {
     post.destroy({
-        where:{ 'id': req.params.id}}).then(function(){
-            res.render("primeira_pagina")
-        }).catch(function(erro){
-            console.log("Erro ocorrido" + erro)
-        })
+        where:{ 'id': req.params.id}   
+    }).then(function(){
+        res.render("primeira_pagina")
+    }).catch(function(erro){
+        console.log("Erro ocorrido" + erro)
     })
+})
+    
+app.get("/atualizar/:id", function(req, res){
+    post.findAll({
+        where:{ 'id': req.params.id}
+    }).then(function(post){
+        //console.log(post)
+        res.render("atualizar", {post})
+    }).catch(function(erro){
+        console.log("Erro ao requisitar dados do banco: " + erro)
+    })
+})
+
+app.post("/atualizar", function(req, res){
+    post.update({
+        nome: req.body.nome,
+        telefone: req.body.telefone,
+        origem: req.body.origem,
+        data_contato: req.body.data_contato,
+        observacao: req.body.observacao
+    },{ 
+        where: {
+            id: req.body.id
+        }
+    }).then(function(){
+        res.redirect("/consulta")
+    })
+})
     
 
 app.listen(8081, function(){
